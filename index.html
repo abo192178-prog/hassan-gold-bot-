@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HASSAN GOLD BOT</title>
+<style>
+body{margin:0;background:#101114;color:white;font-family:Arial,sans-serif;padding:18px}
+header{text-align:center;padding:25px 5px}
+h1{color:#e7bb55;font-size:29px}
+p{color:#aaa}
+.box{background:#1c1e23;border:1px solid #383838;border-radius:14px;padding:18px;margin:12px 0}
+.gold{color:#e7bb55;font-size:25px;font-weight:bold}
+button{border:0;border-radius:9px;padding:13px;margin:5px;font-size:15px;font-weight:bold;cursor:pointer}
+.start{background:#e7bb55;color:#111}
+.buy{background:#176b47;color:white}
+.sell{background:#a72c3c;color:white}
+.stop{background:#333;color:white}
+small{color:#aaa;line-height:2}
+</style>
+</head>
+<body>
+<header>
+<h1>HASSAN GOLD BOT</h1>
+<p>لوحة متابعة تداول الذهب XAUUSD</p>
+<span style="color:#e7bb55">● نسخة تجريبية DEMO</span>
+</header>
+
+<div class="box">
+<h3>الرصيد الافتراضي</h3>
+<div class="gold" id="balance">$30.00</div>
+<p>الربح والخسارة: <b id="profit">$0.00</b></p>
+</div>
+
+<div class="box">
+<h3>سعر الذهب الافتراضي</h3>
+<div class="gold" id="price">2650.00</div>
+<p>حالة المحاكاة: <b id="status">متوقفة</b></p>
+<button class="start" onclick="start()">تشغيل المحاكاة</button>
+<button class="stop" onclick="stop()">إيقاف المحاكاة</button>
+</div>
+
+<div class="box">
+<h3>تجربة الصفقات</h3>
+<button class="buy" onclick="trade('شراء')">شراء تجريبي</button>
+<button class="sell" onclick="trade('بيع')">بيع تجريبي</button>
+<button class="stop" onclick="closeTrade()">إغلاق الصفقة</button>
+<p id="trade">لا توجد صفقة مفتوحة</p>
+</div>
+
+<div class="box">
+<h3>سجل النشاط</h3>
+<div id="logs">تم تحميل الموقع بنجاح.</div>
+</div>
+
+<div class="box">
+<small>
+تنبيه: هذا الموقع للتجربة والتعليم فقط. الأسعار والصفقات افتراضية، ولا يوجد اتصال مباشر بـ Exness أو MT5، ولا يتم تنفيذ صفقات حقيقية. التداول ينطوي على مخاطر.
+</small>
+</div>
+
+<script>
+let price=2650,balance=30,profit=0,running=false,timer=null,position=null,entry=0;
+function log(s){
+document.getElementById('logs').innerHTML=
+s+'<br>'+document.getElementById('logs').innerHTML;
+}
+function draw(){
+document.getElementById('price').textContent=price.toFixed(2);
+document.getElementById('balance').textContent='$'+balance.toFixed(2);
+document.getElementById('profit').textContent='$'+profit.toFixed(2);
+}
+function start(){
+if(running)return;
+running=true;
+document.getElementById('status').textContent='تعمل تجريبياً';
+timer=setInterval(()=>{
+price+=(Math.random()-.49)*3;
+draw();
+},1500);
+log('بدأت المحاكاة الافتراضية.');
+}
+function stop(){
+running=false;
+clearInterval(timer);
+document.getElementById('status').textContent='متوقفة';
+log('تم إيقاف المحاكاة.');
+}
+function trade(side){
+if(position){
+log('أغلق الصفقة الحالية أولاً.');
+return;
+}
+position=side;
+entry=price;
+document.getElementById('trade').textContent=
+side+' تجريبي عند '+entry.toFixed(2);
+log('فتح '+side+' تجريبي.');
+}
+function closeTrade(){
+if(!position){
+log('لا توجد صفقة مفتوحة.');
+return;
+}
+let result=(price-entry)*(position==='شراء'?1:-1);
+result=Math.round(result*100)/100;
+profit+=result;
+balance+=result;
+log('إغلاق تجريبي. النتيجة: $'+result.toFixed(2));
+position=null;
+document.getElementById('trade').textContent='لا توجد صفقة مفتوحة';
+draw();
+}
+draw();
+</script>
+</body>
+  </html>
